@@ -1,0 +1,127 @@
+{% extends 'budget/base.html' %} {% block content %}
+
+<div class="container">
+  <section class="section section-stats">
+    <div class="row">
+      <div class="col s12 m12">
+        <div class="card-panel">
+          <h6 class="bold">Total Budget</h6>
+          <h1 class="bold">${{ project.budget }}</h1>
+        </div>
+      </div>
+      <div class="col s12 m6">
+        <div class="card-panel">
+          <h6 class="bold">Budget Left</h6>
+          {% if project.budget_left > 0 %}
+          <h1 class="bold green-text">${{ project.budget_left }}</h1>
+          {% elif project.budget_left == 0 %}
+          <h1 class="bold orange-text">${{ project.budget_left }}</h1>
+          {% else %}
+          <h1 class="bold red-text">${{ project.budget_left }}</h1>
+          {% endif %}
+        </div>
+      </div>
+      <div class="col s12 m6">
+        <div class="card-panel">
+          <h6 class="bold">Total Transactions</h6>
+          <h1 class="bold">{{ project.total_transactions }}</h1>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="section section-expenses">
+    <div class="row">
+      <button
+        class="btn waves-effect right modal-trigger"
+        data-target="expenseModal"
+      >
+        <i class="material-icons white-text left">add_circle</i> Add Expense
+      </button>
+    </div>
+    <ul class="z-depth-1">
+      {% for expense in expense_list %}
+      <li>
+        <div class="card-panel z-depth-0 expense">
+          <div class="row">
+            <div class="col l6">
+              <span class="title">{{ expense.title }}</span>
+            </div>
+            <div class="col l3">
+              <span class="title">${{ expense.amount }}</span>
+            </div>
+            <div class="col l1">
+              <span class="title bold">{{ expense.category.name }}</span>
+            </div>
+            <a class="delete-expense" data-id="{{ expense.id }}">
+              <i class="material-icons red-text right">close</i>
+            </a>
+          </div>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<div id="expenseModal" class="modal">
+  <div class="modal-content">
+    <h4>Add Expense</h4>
+    <form action="" method="POST">
+      {% csrf_token %}
+      <label for="title">Title</label>
+      <input type="text" name="title" id="title" />
+      <label for="amount">Amount</label>
+      <input type="text" name="amount" id="amount" />
+      <select name="category" class="select">
+        {% for category in category_list %}
+        <option>{{ category.name }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn">Add Category</button>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var elems = document.querySelectorAll(".modal");
+    var instances = M.Modal.init(elems);
+
+    var selectElem = document.querySelector(".select");
+    var selectInstance = M.FormSelect.init(selectElem);
+
+    var deleteButtons = document.querySelectorAll(".delete-expense");
+    deleteButtons.forEach(function (button) {
+      button.addEventListener("click", function (event) {
+        event.preventDefault();
+        var id = button.getAttribute("data-id");
+        deleteExpense(id, button);
+      });
+    });
+
+    function deleteExpense(id, button) {
+      fetch("", {
+        method: "DELETE",
+        headers: {
+          "X-CSRFToken": "{{ csrf_token }}",
+        },
+        body: JSON.stringify({
+          id: id,
+        }),
+        credentials: "same-origin",
+      })
+        .then(function (response) {
+          if (response.ok) {
+            var expenseItem = button.closest(".expense");
+            expenseItem.remove();
+          }
+        })
+        .catch(function (error) {
+          console.error("Error deleting expense:", error);
+        });
+    }
+  });
+</script>
+
+{% endblock %}
