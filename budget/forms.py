@@ -2,6 +2,7 @@ from django import forms
 from .choices import INCOME_FREQUENCY_CHOICES
 
 class ExpenseForm(forms.Form):
+    date = forms.DateField()
     title = forms.CharField()
     amount = forms.IntegerField()
     category = forms.CharField()
