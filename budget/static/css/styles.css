@@ -55,7 +55,8 @@ li.category {
   text-decoration: none;
 }
 
-.delete-expense {
+.delete-expense,
+.delete-income {
   cursor: pointer;
 }
 
