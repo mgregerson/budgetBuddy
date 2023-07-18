@@ -45,16 +45,6 @@ li.category {
   margin-right: 5px;
 }
 
-.btnRemove {
-  cursor: pointer;
-}
-
-/* Change the link appearance when hovered */
-.btnRemove:hover {
-  color: red;
-  text-decoration: none;
-}
-
 .delete-expense,
 .delete-income {
   cursor: pointer;
@@ -62,23 +52,49 @@ li.category {
 
 /* Project Detail Expenses */
 
-.section-expenses button {
+button {
   padding: 0px 40px;
   font-weight: bold;
-  text-shadow: 0px 3px 4px (0, 0, 0, 0.25);
+  text-shadow: 0px 3px 4px rgba(0, 0, 0, 0.25);
   background-color: #6fcf97;
 }
 
-.section-expenses .expense {
+.section-expense .expense,
+.section-income .income {
   font-size: 16px;
   border-radius: 0;
   margin: 0;
 }
 
-.section-expenses .expense .category {
+.section-expense .expense .category {
   font-size: 13px;
 }
 
-.section-expenses li:nth-child(even) .expense {
+.section-expenses .z-depth-1 thead tr,
+.section-income .z-depth-1 thead tr {
+  display: flex;
+  align-items: center;
+}
+
+.section-expenses .z-depth-1 thead tr th,
+.section-income .z-depth-1 thead tr th {
+  flex: 1;
+  text-align: center;
+}
+
+.section-expenses .z-depth-1 tbody tr,
+.section-income .z-depth-1 tbody tr {
+  display: flex;
+  align-items: center;
+}
+
+.section-expenses .z-depth-1 tbody tr td,
+.section-income .z-depth-1 tbody tr td {
+  flex: 1;
+  text-align: center;
+}
+
+.section-expenses .z-depth-1 tbody tr:nth-child(odd),
+.section-income .z-depth-1 tbody tr:nth-child(odd) {
   background-color: #f2f2f2;
 }
