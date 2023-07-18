@@ -28,36 +28,39 @@ def project_detail(request, project_slug):
           })
     
     elif request.method == 'POST':
-        if 'expense_submit' in request.POST:
-            expense_form = ExpenseForm(request.POST)
-            if expense_form.is_valid():
-                title = expense_form.cleaned_data['title']
-                amount = expense_form.cleaned_data['amount']
-                category_name = expense_form.cleaned_data['category']
+      if 'expense_submit' in request.POST:
+          print('GOT HERE BABY')
+          expense_form = ExpenseForm(request.POST)
+          if expense_form.is_valid():
+              date = expense_form.cleaned_data['date']
+              title = expense_form.cleaned_data['title']
+              amount = expense_form.cleaned_data['amount']
+              category_name = expense_form.cleaned_data['category']
 
-                category = get_object_or_404(Category, project=project, name=category_name)
+              category = get_object_or_404(Category, project=project, name=category_name)
 
-                Expense.objects.create(
-                    project=project,
-                    title=title,
-                    amount=amount,
-                    category=category
-                ).save()
-        elif 'income_submit' in request.POST:
-            income_form = IncomeForm(request.POST)
-            if income_form.is_valid():
-                date = income_form.cleaned_data['date']
-                description = income_form.cleaned_data['description']
-                amount = income_form.cleaned_data['amount']
-                source = income_form.cleaned_data['source']
+              Expense.objects.create(
+                  project=project,
+                  date=date,
+                  title=title,
+                  amount=amount,
+                  category=category
+              ).save()
+      elif 'income_submit' in request.POST:
+          income_form = IncomeForm(request.POST)
+          if income_form.is_valid():
+              date = income_form.cleaned_data['date']
+              description = income_form.cleaned_data['description']
+              amount = income_form.cleaned_data['amount']
+              source = income_form.cleaned_data['source']
 
-                Income.objects.create(
-                    project=project,
-                    date=date,
-                    description=description,
-                    amount=amount,
-                    source=source,
-                ).save()
+              Income.objects.create(
+                  project=project,
+                  date=date,
+                  description=description,
+                  amount=amount,
+                  source=source,
+              ).save()
 
     elif request.method == 'DELETE':
         data = json.loads(request.body)
