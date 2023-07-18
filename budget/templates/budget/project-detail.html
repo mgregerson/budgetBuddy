@@ -33,6 +33,12 @@
     <div class="row">
       <button
         class="btn waves-effect right modal-trigger"
+        data-target="incomeModal"
+      >
+        <i class="material-icons white-text left">add_circle</i>Add Income
+      </button>
+      <button
+        class="btn waves-effect right modal-trigger"
         data-target="expenseModal"
       >
         <i class="material-icons white-text left">add_circle</i> Add Expense
@@ -60,6 +66,31 @@
       </li>
       {% endfor %}
     </ul>
+    <ul class="z-depth-1">
+      {% for income in income_list %}
+      <li>
+        <div class="card-panel z-depth-0 expense">
+          <div class="row">
+            <div class="col l3">
+              <span class="title">{{ income.description }}</span>
+            </div>
+            <div class="col l3">
+              <span class="title">{{ income.date }}</span>
+            </div>
+            <div class="col l3">
+              <span class="title">${{ income.amount }}</span>
+            </div>
+            <div class="col l1">
+              <span class="title bold">{{ income.source }}</span>
+            </div>
+            <a class="delete-income" data-id="{{ income.id }}">
+              <i class="material-icons red-text right">close</i>
+            </a>
+          </div>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
   </div>
 </div>
 
@@ -77,7 +108,29 @@
         <option>{{ category.name }}</option>
         {% endfor %}
       </select>
-      <button type="submit" class="btn">Add Category</button>
+      <button type="submit" name="expense_submit" class="btn">
+        Add Expense
+      </button>
+    </form>
+  </div>
+</div>
+
+<div id="incomeModal" class="modal">
+  <div class="modal-content">
+    <h4>Add Income</h4>
+    <form action="" method="POST">
+      {% csrf_token %}
+      <label for="date">Date</label>
+      <input type="date" name="date" id="date" />
+      <label for="description">Description</label>
+      <input type="text" name="description" id="description" />
+      <label for="amount">Amount</label>
+      <input type="text" name="amount" id="amount" />
+      <label for="source">Source</label>
+      <input type="text" name="source" id="source" />
+      <button type="submit" name="income_submit" class="btn btn-right">
+        Add Income
+      </button>
     </form>
   </div>
 </div>
@@ -91,8 +144,8 @@
     var selectElem = document.querySelector(".select");
     var selectInstance = M.FormSelect.init(selectElem);
 
-    var deleteButtons = document.querySelectorAll(".delete-expense");
-    deleteButtons.forEach(function (button) {
+    var expenseDeleteButtons = document.querySelectorAll(".delete-expense");
+    expenseDeleteButtons.forEach(function (button) {
       button.addEventListener("click", function (event) {
         event.preventDefault();
         var id = button.getAttribute("data-id");
@@ -108,6 +161,7 @@
         },
         body: JSON.stringify({
           id: id,
+          type: "expense",
         }),
         credentials: "same-origin",
       })
@@ -119,6 +173,38 @@
         })
         .catch(function (error) {
           console.error("Error deleting expense:", error);
+        });
+    }
+
+    var incomeDeleteButtons = document.querySelectorAll(".delete-income");
+    incomeDeleteButtons.forEach(function (button) {
+      button.addEventListener("click", function (event) {
+        event.preventDefault();
+        var id = button.getAttribute("data-id");
+        deleteIncome(id, button);
+      });
+    });
+
+    function deleteIncome(id, button) {
+      fetch("", {
+        method: "DELETE",
+        headers: {
+          "X-CSRFToken": "{{ csrf_token }}",
+        },
+        body: JSON.stringify({
+          id: id,
+          type: "income",
+        }),
+        credentials: "same-origin",
+      })
+        .then(function (response) {
+          if (response.ok) {
+            var incomeItem = button.closest(".income");
+            incomeItem.remove();
+          }
+        })
+        .catch(function (error) {
+          console.error("Error deleting income due to", error);
         });
     }
   });
