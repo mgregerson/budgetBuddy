@@ -27,7 +27,8 @@ class Project(models.Model):
 
     def total_transactions(self):
         expense_list = Expense.objects.filter(project=self)
-        return len(expense_list)
+        income_list = Income.objects.filter(project=self)
+        return len(expense_list) + len(income_list)
 
 class Category(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
@@ -38,6 +39,7 @@ class Expense(models.Model):
     title = models.CharField(max_length = 100)
     amount = models.DecimalField(max_digits=8, decimal_places=2)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    date = models.DateField(null=True)
 
     class Meta:
         ordering = ('-amount',)
