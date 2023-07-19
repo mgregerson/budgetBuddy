@@ -19,7 +19,10 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.project_list, name='list'),
-    path('add', views.ProjectCreateView.as_view(), name='add'),
-    path('<slug:project_slug>', views.project_detail, name='detail')
+    path('projects', views.project_list, name='list'),
+    path('accounts', views.account_list, name='account_list'),
+    path('add_project', views.ProjectCreateView.as_view(), name='add_project'),
+    path('add_account', views.AccountCreateView.as_view(), name='add_account'),
+    path('projects/<slug:project_slug>', views.project_detail, name='project_detail'),
+    path('accounts/<slug:account_slug>', views.account_detail, name='account_detail')
 ]
