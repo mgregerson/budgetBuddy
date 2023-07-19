@@ -1,0 +1,33 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="container">
+  <h3 class="center-align">Your Accounts:</h3>
+  <hr />
+  <div class="row">
+    {% for account in account_list %}
+    <div class="col s12 l3">
+      <div class="card-panel">
+        <h5>{{ account.name }}</h5>
+        <a href="{% url 'account_detail' account.slug %}" class="btn">Visit</a>
+      </div>
+    </div>
+    <a
+      class="btn waves-effect right modal-trigger"
+      href="{% url 'add_account' %}"
+      class="btn"
+    >
+      <i class="material-icons white-text left">add_circle</i> Add A New Account
+    </a>
+    {% empty %}
+    <div class="noproject-wrapper center">
+      <h3 class="grey-text">Sorry, you don't have any accounts yet</h3>
+      <a href="{% url 'add_account' %}" class="btn-large grey">
+        <i class="material-icons white-text left">add_circle</i>
+        <span class="bold">Add Accounts</span>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}
