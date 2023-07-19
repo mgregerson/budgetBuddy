@@ -14,4 +14,3 @@ class IncomeForm(forms.Form):
     source = forms.CharField()
     is_recurring = forms.BooleanField(required=False)
     recurring_frequency = forms.ChoiceField(choices=INCOME_FREQUENCY_CHOICES, required=False)
-    
