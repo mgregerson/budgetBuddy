@@ -1,21 +1,21 @@
-{% extends 'budget/base.html' %} {% block content %}
+{% extends 'base.html' %} {% block content %}
 
 <div class="container">
-  <h1 class="center-align">
+  <h3 class="center-align">
     Welcome to Budget Buddy! Take a look at your current projects:
-  </h1>
+  </h3>
   <hr />
   <div class="row">
     {% for project in project_list %}
     <div class="col s12 l3">
       <div class="card-panel">
         <h5>{{ project.name }}</h5>
-        <a href="{% url 'detail' project.slug %}" class="btn">Visit</a>
+        <a href="{% url 'project_detail' project.slug %}" class="btn">Visit</a>
       </div>
     </div>
     <a
       class="btn waves-effect right modal-trigger"
-      href="{% url 'add' %}"
+      href="{% url 'add_project' %}"
       class="btn"
     >
       <i class="material-icons white-text left">add_circle</i> Add A New Project
@@ -23,7 +23,7 @@
     {% empty %}
     <div class="noproject-wrapper center">
       <h3 class="grey-text">Sorry, you don't have any projects yet</h3>
-      <a href="" class="btn-large grey">
+      <a href="{% url 'add_project' %}" class="btn-large grey">
         <i class="material-icons white-text left">add_circle</i>
         <span class="bold">Add Projects</span>
       </a>
