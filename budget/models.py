@@ -2,9 +2,12 @@ from django.db import models
 from django.utils.text import slugify
 from .choices import INCOME_FREQUENCY_CHOICES, CURRENCY_CHOICES
 
+from user.models import CustomUser
+
 class Project(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100, unique=True, blank=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='projects')
     budget = models.IntegerField()
 
     def save(self, *args, **kwargs):
@@ -39,6 +42,7 @@ class Account(models.Model):
     routing_number = models.CharField(max_length=50, blank=True)
     institution = models.CharField(max_length=100, blank=True)
     description = models.TextField(blank=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='accounts')
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
