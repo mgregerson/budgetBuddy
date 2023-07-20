@@ -162,10 +162,10 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 AUTH_USER_MODEL = 'user.CustomUser'
 
-AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend'
-)
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # For the default authentication backend
+    'allauth.account.auth_backends.AuthenticationBackend',  # For Django AllAuth's authentication backend
+]
 
 LOGIN_REDIRECT_URL = '/user/profile/'
 LOGOUT_REDIRECT_URL = '/user/login/'
