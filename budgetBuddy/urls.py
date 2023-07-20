@@ -20,5 +20,6 @@ from django.urls import path, include
 urlpatterns = [
     path('', include('budget.urls')),
     path('user/', include('user.urls')),
-    path('admin/', admin.site.urls)
+    path('admin/', admin.site.urls),
+    path('accounts/', include('allauth.urls')),  # Include AllAuth URLs here
 ]
