@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
 from django.views.generic import CreateView
 from django.utils.text import slugify
+from django.urls import reverse
 
 from .models import Project, Category, Expense, Income, Account
 from .forms import ExpenseForm, IncomeForm
@@ -149,6 +150,7 @@ class ProjectCreateView(CreateView):
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
+        self.object.user = self.request.user
         self.object.save()
 
         categories = self.request.POST['categoriesString'].split(',')
@@ -159,9 +161,10 @@ class ProjectCreateView(CreateView):
             ).save()
 
         return HttpResponseRedirect(self.get_success_url())
-    
+
     def get_success_url(self):
-        return slugify(self.request.POST['name'])
+        project_slug = slugify(self.request.POST['name'])
+        return reverse('project_detail', kwargs={'project_slug': project_slug})
     
 class AccountCreateView(CreateView):
     model = Account
@@ -170,6 +173,8 @@ class AccountCreateView(CreateView):
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
+        # Set the user for the account using the current user
+        self.object.user = self.request.user
         self.object.save()
 
         return HttpResponseRedirect(f"accounts/{self.get_success_url()}")
