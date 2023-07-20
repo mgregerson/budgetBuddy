@@ -1,6 +1,6 @@
 from django.shortcuts import  render, redirect
 from .forms import CustomUserCreationForm, CustomUserChangeForm, CustomUserLoginForm
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
@@ -19,10 +19,12 @@ def register_request(request):
 def login_request(request):
     if request.method == "POST":
         form = CustomUserLoginForm(request.POST)
+        print('METHOD IS POST')
         if form.is_valid():
-            username = form.cleaned_data.get('username')
+            print('FORM IS VALID')
+            email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
-            user = authenticate(request, username=username, password=password)
+            user = authenticate(email=email, password=password)
             if user is not None:
                 login(request, user)
                 return redirect('profile')
@@ -30,7 +32,7 @@ def login_request(request):
                 form.add_error(None, 'Invalid username or password.')
     else:
         form = CustomUserLoginForm()
-    return render(request, 'accounts/login.html', {'form': form})
+    return render(request, 'auth/login.html', {'form': form})
 
 @login_required
 def user_profile(request):
@@ -39,3 +41,8 @@ def user_profile(request):
         'user': user
     }
     return render(request, 'auth/profile.html', context)
+
+def logout_request(request):
+    logout(request)
+    messages.info(request, "You have successfully logged out.")
+    return redirect("login")

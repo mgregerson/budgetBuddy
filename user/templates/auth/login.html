@@ -1,1 +1,14 @@
-<h1>Login</h1>
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="container py-5">
+  <h1>Login</h1>
+  <form method="post">
+    {% csrf_token %} {{ form.as_p }}
+    <button class="btn waves-effect waves-light" type="submit">Login</button>
+  </form>
+  <p class="text-center">
+    If you don't have an account,
+    <a href="{% url 'register' %}">register</a> instead.
+  </p>
+</div>
+
+{% endblock %}
