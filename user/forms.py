@@ -22,21 +22,25 @@ class CustomUserChangeForm(UserChangeForm):
             raise forms.ValidationError('Invalid password. Please enter your current password.')
         return password
     
-class CustomUserLoginForm(AuthenticationForm):
-    username = forms.EmailField(widget=forms.EmailInput(attrs={'autofocus': True}))
-
-    class Meta:
-        model = CustomUser
-        fields = ('username', 'password')
+class CustomUserLoginForm(forms.Form):
+    email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput)
 
     def clean(self):
         cleaned_data = super().clean()
-        username = cleaned_data.get('username')
+        email = cleaned_data.get('email')
         password = cleaned_data.get('password')
         
-        if username and password:
-            user = authenticate(username=username, password=password)
-            if user is None:
-                raise forms.ValidationError('Invalid username or password.')
-        
+        if email and password:
+            try:
+                user = CustomUser.objects.get(email=email)
+                user = authenticate(username=user.email, password=password)
+                if user:
+                    cleaned_data['user'] = user
+                    return cleaned_data
+                else:
+                    raise forms.ValidationError('Invalid email or password.')
+            except CustomUser.DoesNotExist:
+                raise forms.ValidationError('Invalid email or password.')
+
         return cleaned_data
